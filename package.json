@@ -1,0 +1,27 @@
+{
+  "name": "svg-editor",
+  "version": "1.0.0",
+  "description": "svg editor",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "qhy",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.2.69",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.3"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "mobx": "^6.12.1",
+    "mobx-react": "^9.1.0",
+    "mobx-react-lite": "^4.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sass": "^1.72.0"
+  }
+}

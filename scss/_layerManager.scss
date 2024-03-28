@@ -1,0 +1,36 @@
+.SvgEditor-LayerManager {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 200px;
+  }
+  &-items {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: default;
+    svg {
+      margin-right: 10px;
+      fill: var(--default-fill);
+      stroke: var(--default-stroke);
+    }
+    input {
+      font-size: 12px;
+      margin-left: -4px;
+      padding-left: 2px;
+      border: none;
+      outline: none;
+    }
+  }
+  &-items--active {
+    background-color: var(--active-color);
+    color: #fff;
+    svg {
+      fill: var(--active-fill);
+      stroke: var(--active-stroke);
+    }
+  }
+}

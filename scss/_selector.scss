@@ -1,0 +1,22 @@
+.resize-rect {
+  filter: drop-shadow(0px 0px 1px rgb(0 0 0 / 0.4));
+}
+.ne-resize,
+.se-resize {
+  cursor: nwse-resize;
+}
+.n-resize,
+.s-resize {
+  cursor: ns-resize;
+}
+.ne-resize,
+.sw-resize {
+  cursor: nesw-resize;
+}
+.e-resize,
+.w-resize {
+  cursor: ew-resize;
+}
+.resize-rect-rotate {
+  cursor: pointer;
+}
