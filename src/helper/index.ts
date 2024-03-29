@@ -56,16 +56,16 @@ export function getMaxRect(
 ) {
   let x = Infinity;
   let y = Infinity;
-  let width = 0;
-  let height = 0;
+  let maxX = 0;
+  let maxY = 0;
   for (const svgData of svgDataList) {
     const rect = getRect(svgData, store, oneSelected)!;
     x = Math.min(x, rect.x);
     y = Math.min(y, rect.y);
-    width = Math.max(width, rect.width + rect.x - x);
-    height = Math.max(height, rect.height + rect.y - y);
+    maxX = Math.max(maxX, rect.width + rect.x);
+    maxY = Math.max(maxY, rect.height + rect.y);
   }
-  return x !== Infinity ? {x, y, width, height} : undefined;
+  return x !== Infinity ? {x, y, width: maxX - x, height: maxY - y} : undefined;
 }
 
 export function resizeCompute(
