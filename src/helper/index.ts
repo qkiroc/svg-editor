@@ -229,18 +229,29 @@ export function moveCompute(
 ) {
   const {clientX, clientY} = endPoint;
   const {x, y} = startPoint;
-  const rotate = rect.transform?.rotate[0] || 0;
-  const radian = (rotate * Math.PI) / 180;
-  const cosTheta = Math.cos(radian);
-  const sinTheta = Math.sin(radian);
-  //TODO:旋转后的移动,还需要同时修改旋转中心，现在是有问题的
+  const rotate = rect.transform?.rotate
+    ? [...rect.transform?.rotate]
+    : [0, 0, 0];
 
-  rect.x +=
-    direction === 'y' ? 0 : (clientX - x) * cosTheta + (clientY - y) * sinTheta;
-  rect.y +=
-    direction === 'x' ? 0 : (clientY - y) * cosTheta - (clientX - x) * sinTheta;
+  const translate_x = clientX - x;
+  const translate_y = clientY - y;
 
-  return rect;
+  // 之前想麻烦了，直接同时移动旋转中心就行了
+  if (rotate[0] !== 0) {
+    rotate[1] += direction === 'y' ? 0 : translate_x;
+    rotate[2] += direction === 'x' ? 0 : translate_y;
+  }
+
+  const newConfig = {
+    x: direction === 'y' ? 0 : rect.x + translate_x,
+    y: direction === 'x' ? 0 : rect.y + translate_y,
+    transform: {
+      ...rect.transform,
+      rotate
+    }
+  };
+
+  return newConfig;
 }
 
 export function rotateCompute(

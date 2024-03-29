@@ -155,7 +155,7 @@ function selectTool(): SvgTool {
       const translate_y = newRect.y - y;
       const isOne = store.selectedIds.length === 1;
       store.selectedIds.forEach(id => {
-        rectMove([translate_x, translate_y], id, isOne, store);
+        rectMove([translate_x, translate_y], id, store);
       });
       startPoint = {x: e.clientX, y: e.clientY};
       return;

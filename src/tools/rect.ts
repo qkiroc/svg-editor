@@ -95,27 +95,22 @@ export function rectRotate(rotate: number[], id: number, store: Store) {
   });
 }
 
-export function rectMove(
-  move: number[],
-  id: number,
-  isOne: boolean,
-  store: Store
-) {
+export function rectMove(move: number[], id: number, store: Store) {
   const svgData = store.getSvgData(id);
   const {x, y} = svgData;
-  const rotate = svgData.transform?.rotate[0] || 0;
-  const radian = (rotate * Math.PI) / 180;
-  const cosTheta = Math.cos(radian);
-  const sinTheta = Math.sin(radian);
-  let newConfig = {
+  const rotate = svgData.transform?.rotate
+    ? [...svgData.transform?.rotate]
+    : [0, 0, 0];
+  let newConfig: any = {
     x: x + move[0],
     y: y + move[1]
   };
-  // 选中的如果不是一个元素，就需要考虑旋转，单独计算
-  if (!isOne) {
-    newConfig = {
-      x: x + move[0] * cosTheta + move[1] * sinTheta,
-      y: y + move[1] * cosTheta - move[0] * sinTheta
+  if (rotate[0] !== 0) {
+    rotate[1] += move[0];
+    rotate[2] += move[1];
+    newConfig.transform = {
+      ...svgData.transform,
+      rotate
     };
   }
   store.updateSvgData(id, {
