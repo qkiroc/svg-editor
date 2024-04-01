@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useStore} from './store';
 import SvgRender from './renders/SvgRender';
 import './tools/index';
@@ -6,9 +6,11 @@ import {getSvgTool, getSvgTools, toolsManage} from './manage/svgTools';
 import {observer} from 'mobx-react-lite';
 import SvgSelectorRender from './renders/SvgSelectorRender';
 import {keyManage} from './manage/keyManage';
+import {debounce} from 'lodash';
 
 function SvgEditor() {
   const store = useStore();
+  const [viewBox, setViewBox] = useState([0, 0, 0, 0]);
 
   const svgTool = getSvgTools();
 
@@ -40,12 +42,36 @@ function SvgEditor() {
     keyManage('up', e, store);
   }
 
+  const handleMouseWheel = debounce((e: WheelEvent) => {
+    e.preventDefault();
+    let scale = 1;
+    if (e.deltaY < 0) {
+      scale = -1;
+    }
+    console.log('wheel', e.deltaY);
+    setViewBox(viewBox => {
+      viewBox[2] += scale;
+      viewBox[3] += scale;
+
+      if (viewBox[2] < 100) {
+        viewBox[2] = 100;
+      }
+      if (viewBox[3] < 500) {
+        viewBox[3] = 500;
+      }
+
+      return [...viewBox];
+    });
+    document.removeEventListener('wheel', handleMouseWheel);
+  }, 100);
+
   useEffect(() => {
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
+
     return () => {
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mousemove', handleMouseMove);
@@ -59,9 +85,22 @@ function SvgEditor() {
     if (!svgCanvas) {
       return;
     }
+    svgCanvas.addEventListener(
+      'wheel',
+      e => {
+        console.log('wheel', e.deltaY, e);
+        e.preventDefault();
+        // handleMouseWheel(e);
+      },
+      {passive: false}
+    );
     const container = svgCanvas.getBoundingClientRect();
     store.svgCanvasLeft = container.left;
     store.svgCanvasTop = container.top;
+    const {width, height} = container;
+    if (viewBox[2] === 0 && viewBox[3] === 0) {
+      setViewBox([0, 0, width, height]);
+    }
   }
 
   return (
@@ -88,7 +127,7 @@ function SvgEditor() {
         className="SvgEditor-Canvas"
         style={{cursor: getSvgTool(store.toolType)?.cursor}}
       >
-        <svg ref={handleSvgCanvasRef}>
+        <svg ref={handleSvgCanvasRef} viewBox={viewBox.join(' ')}>
           {store.svgDataList.map(svgData => {
             return <SvgRender svgData={svgData} key={svgData.id} />;
           })}
